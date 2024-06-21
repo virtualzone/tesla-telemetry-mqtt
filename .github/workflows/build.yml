@@ -8,7 +8,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}-zmq-proxy
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
 
@@ -18,7 +18,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: install libczmq
-      working-directory: ./zmq-proxy
+      working-directory: .
       run: apt-get update && apt install -y libczmq4 libczmq-dev
     - name: Install dependencies
       working-directory: .
