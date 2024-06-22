@@ -2,11 +2,17 @@ package main
 
 import (
 	"os"
+	"strings"
 	"sync"
 )
 
 type Config struct {
-	ZMQPublisher string
+	ZMQPublisher    string
+	MqttBroker      string
+	MqttClientID    string
+	MqttUsername    string
+	MqttPassword    string
+	MqttTopicPrefix string
 }
 
 var _configInstance *Config
@@ -22,6 +28,14 @@ func GetConfig() *Config {
 
 func (c *Config) ReadConfig() {
 	c.ZMQPublisher = c.getEnv("ZMQ_PUB", "")
+	c.MqttBroker = c.getEnv("MQTT_BROKER", "")
+	c.MqttClientID = c.getEnv("MQTT_CLIENT_ID", "fleet-telemetry")
+	c.MqttUsername = c.getEnv("MQTT_USERNAME", "")
+	c.MqttPassword = c.getEnv("MQTT_PASSWORD", "")
+	c.MqttTopicPrefix = c.getEnv("MQTT_TOPIC_PREFIX", "tesla/telemetry")
+	if !strings.HasSuffix(c.MqttTopicPrefix, "/") {
+		c.MqttTopicPrefix += "/"
+	}
 }
 
 func (c *Config) getEnv(key, defaultValue string) string {
