@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -15,7 +16,7 @@ import (
 var mqttClient mqtt.Client
 
 func main() {
-	log.Println("Starting chargebot.io ZMQ Proxy...")
+	log.Println("Starting Fleet Telemetry ZMQ to MQTT Forwarder...")
 	GetConfig().ReadConfig()
 	connectMqtt()
 	serveZMQ()
@@ -23,6 +24,7 @@ func main() {
 
 func serveZMQ() {
 	if GetConfig().ZMQPublisher == "" {
+		log.Panicf("ZMQ Publisher not set")
 		return
 	}
 
@@ -77,7 +79,8 @@ func zmqLoop(s *zmq.Socket) {
 		for _, e := range data.Data {
 			keyName := protos.Field_name[int32(e.Key)]
 			value := e.Value.GetStringValue()
-			mqttClient.Publish(topicPrefix+keyName, 0, false, value)
+			topic := fmt.Sprintf("%s%s/%s", topicPrefix, data.Vin, keyName)
+			mqttClient.Publish(topic, 0, false, value)
 		}
 	}
 }
@@ -93,7 +96,7 @@ func connectMqtt() {
 
 	c := mqtt.NewClient(opts)
 	if token := c.Connect(); token.Wait() && token.Error() != nil {
-		panic(token.Error())
+		log.Panicf(token.Error().Error())
 	}
 	mqttClient = c
 }
