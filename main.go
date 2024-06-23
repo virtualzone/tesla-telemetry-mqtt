@@ -80,6 +80,7 @@ func zmqLoop(s *zmq.Socket) {
 			keyName := protos.Field_name[int32(e.Key)]
 			value := e.Value.GetStringValue()
 			topic := fmt.Sprintf("%s%s/%s", topicPrefix, data.Vin, keyName)
+			log.Printf("Publishing to MQTT Topic %s = %s\n", topic, value)
 			mqttClient.Publish(topic, 0, false, value)
 		}
 	}
