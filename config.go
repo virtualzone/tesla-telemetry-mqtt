@@ -27,8 +27,8 @@ func GetConfig() *Config {
 }
 
 func (c *Config) ReadConfig() {
-	c.ZMQPublisher = c.getEnv("ZMQ_PUB", "")
-	c.MqttBroker = c.getEnv("MQTT_BROKER", "")
+	c.ZMQPublisher = c.getEnv("ZMQ_PUB", "tcp://localhost:5555")
+	c.MqttBroker = c.getEnv("MQTT_BROKER", "tcp://localhost:1883")
 	c.MqttClientID = c.getEnv("MQTT_CLIENT_ID", "fleet-telemetry")
 	c.MqttUsername = c.getEnv("MQTT_USERNAME", "")
 	c.MqttPassword = c.getEnv("MQTT_PASSWORD", "")
