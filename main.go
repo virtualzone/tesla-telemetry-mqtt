@@ -81,7 +81,7 @@ func zmqLoop(s *zmq.Socket) {
 			value := e.Value.GetStringValue()
 			topic := fmt.Sprintf("%s%s/%s", topicPrefix, data.Vin, keyName)
 			log.Printf("Publishing to MQTT Topic %s = %s\n", topic, value)
-			mqttClient.Publish(topic, 0, false, value)
+			mqttClient.Publish(topic, 0, true, value)
 		}
 	}
 }
